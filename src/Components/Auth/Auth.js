@@ -1,7 +1,7 @@
 
 import React, { useState } from "react"
 
-export default function (props) {
+export default function Auth(props) {
 	let [authMode, setAuthMode] = useState("signin")
 
 	const changeAuthMode = () => {
@@ -9,20 +9,24 @@ export default function (props) {
 	}
 
 	function handleButtonClick() {
-		fetch("https://jsonplaceholder.typicode.com/posts", {
+		fetch("/api/posts", {
 			method: "POST",
-			body: JSON.stringify({
-				Email: "",
-				Password: ""
-			}),
 			headers: {
 				"Content-type": "application/json"
 			}
 		})
-			.then(response => response.json())
-			.then(data => {
-				console.log(data)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				return response.json();
 			})
+			.then(data => {
+				console.log(data);
+			})
+			.catch(error => {
+				console.error("Error:", error);
+			});
 	}
 
 	if (authMode === "signin") {
